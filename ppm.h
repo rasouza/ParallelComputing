@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 typedef struct {
-	float red, green, blue;
+	double red, green, blue;
 } PPMPixel;
 
 typedef struct {
