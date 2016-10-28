@@ -98,8 +98,6 @@ void writePPM(const char *filename, PPMImage *img) {
 	//image format
 	fprintf(fp, "P6\n");
 
-	//comments
-	fprintf(fp, "# Created by %s\n", CREATOR);
 
 	//image size
 	fprintf(fp, "%d %d\n", img->x, img->y);

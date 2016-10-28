@@ -14,7 +14,6 @@ typedef struct {
 } PPMImage;
 
 #define RGB_COMPONENT_COLOR 255
-#define CREATOR "RPFELGUEIRAS"
 
 static PPMImage *readPPM(const char *filename);
 
