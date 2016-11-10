@@ -20,14 +20,14 @@ typedef struct {
 // Stencil com as possíveis interações entre os pixels da imagem
 typedef struct {
 	int x, y;
-	PPMPixel* up, left, down, right, center;
-} stencil;
+	PPMPixel *up, *left, *down, *right, *center;
+} Stencil;
 
 
 
 void interactTwoBodies(double* center, double* target, double qty);
 vetor getVetor(PPMPixel* pixel);
-void interact(stencil* mask, vetor interacao);
+void interact(Stencil mask, vetor interacao);
 int isExcess(PPMPixel pixel);
 
 
