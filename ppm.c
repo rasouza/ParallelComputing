@@ -1,6 +1,6 @@
 #include "ppm.h"
 
-static PPMImage *readPPM(const char *filename) {
+PPMImage *readPPM(const char *filename) {
 	char buff[16];
 	PPMImage *img;
 	FILE *fp;
