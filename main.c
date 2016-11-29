@@ -1,4 +1,3 @@
-#include "ppm.h"
 #include "vector.h"
 
 int main() {
