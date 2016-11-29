@@ -122,12 +122,3 @@ void writePPM(const char *filename, PPMImage *img) {
 //      }
 //  }
 //}
-
-int main() {
-	PPMImage *image;
-	image = readPPM("data/linux.ppm");
-	printf("vermelho em (0,0): %f", image->data[2][0].red);
-}
-
-//11526800
-// i + width*j 
