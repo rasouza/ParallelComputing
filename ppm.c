@@ -88,7 +88,7 @@ PPMImage *readPPM(const char *filename) {
 void writePPM(const char *filename, PPMImage *img) {
 	FILE *fp;
 	//open file for output
-	fp = fopen(filename, "wb");
+	fp = fopen(filename, "w");
 	if (!fp) {
 		fprintf(stderr, "Unable to open file '%s'\n", filename);
 		exit(1);
@@ -96,7 +96,7 @@ void writePPM(const char *filename, PPMImage *img) {
 
 	//write the header file
 	//image format
-	fprintf(fp, "P6\n");
+	fprintf(fp, "P3\n");
 
 
 	//image size
@@ -106,7 +106,18 @@ void writePPM(const char *filename, PPMImage *img) {
 	fprintf(fp, "%d\n", RGB_COMPONENT_COLOR);
 
 	// pixel data
-	fwrite(img->data, 3 * img->x, img->y, fp);
+	//fwrite(img->data, 3 * img->x, img->y, fp);
+	for (int i = 0; i < img->y; i++) {
+		for (int j = 0; j < img->x; j++) {
+			fprintf(
+				fp, 
+				"%d %d %d ", 
+				(int)(img->data[i][j].red*255), 
+				(int)(img->data[i][j].green*255), 
+				(int)(img->data[i][j].blue*255)
+			);
+		}
+	}
 	fclose(fp);
 }
 
