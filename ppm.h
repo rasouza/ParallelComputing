@@ -16,6 +16,6 @@ typedef struct {
 #define RGB_COMPONENT_COLOR 255
 
 static PPMImage *readPPM(const char *filename);
-void writePPM(const char *filename, PPMImage *img)
+void writePPM(const char *filename, PPMImage *img);
 
 #endif

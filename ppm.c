@@ -1,7 +1,6 @@
 #include "ppm.h"
 
-static PPMImage *readPPM(const char *filename)
-{
+static PPMImage *readPPM(const char *filename) {
 	char buff[16];
 	PPMImage *img;
 	FILE *fp;
@@ -72,7 +71,7 @@ static PPMImage *readPPM(const char *filename)
 	//read pixel data from file
 	for (int i = 0; i < img->y; i++) {
 		for (int j = 0; j < img->x; j++) {
-			fscanf(fp, "%f %f %f ", &img->data[i][j].red, &img->data[i][j].green, &img->data[i][j].blue);
+			fscanf(fp, "%lf %lf %lf ", &img->data[i][j].red, &img->data[i][j].green, &img->data[i][j].blue);
 
 			// Normaliza as cores entre 0 e 1
 			img->data[i][j].red /= 255.0;
@@ -85,6 +84,7 @@ static PPMImage *readPPM(const char *filename)
 	fclose(fp);
 	return img;
 }
+
 void writePPM(const char *filename, PPMImage *img) {
 	FILE *fp;
 	//open file for output
@@ -112,20 +112,20 @@ void writePPM(const char *filename, PPMImage *img) {
 
 //void changeColorPPM(PPMImage *img)
 //{
-//	int i;
-//	if (img) {
+//  int i;
+//  if (img) {
 //
-//		for (i = 0; i<img->x*img->y; i++) {
-//			img->data[i].red = RGB_COMPONENT_COLOR - img->data[i].red;
-//			img->data[i].green = RGB_COMPONENT_COLOR - img->data[i].green;
-//			img->data[i].blue = RGB_COMPONENT_COLOR - img->data[i].blue;
-//		}
-//	}
+//      for (i = 0; i<img->x*img->y; i++) {
+//          img->data[i].red = RGB_COMPONENT_COLOR - img->data[i].red;
+//          img->data[i].green = RGB_COMPONENT_COLOR - img->data[i].green;
+//          img->data[i].blue = RGB_COMPONENT_COLOR - img->data[i].blue;
+//      }
+//  }
 //}
 
 int main() {
 	PPMImage *image;
-	image = readPPM("data/image.ppm");
+	image = readPPM("data/linux.ppm");
 	printf("vermelho em (0,0): %f", image->data[2][0].red);
 }
 
