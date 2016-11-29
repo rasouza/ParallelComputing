@@ -10,7 +10,7 @@
 
 // Vetor de cor decomposto em coordenadas cartesianas
 typedef struct {
-	int x, y;
+	double x, y;
 } COLOR;
 
 // Vetor de interação entre os pixels
@@ -28,7 +28,7 @@ typedef struct {
 
 
 void interactTwoBodies(double* center, double* target, double qty);
-vetor getVetor(PPMPixel* pixel);
+vetor getVetor(PPMPixel pixel);
 void interact(Stencil mask, vetor interacao);
 int isExcess(PPMPixel pixel);
 
