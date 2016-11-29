@@ -2,7 +2,7 @@
 
 void interactTwoBodies(double* center, double* target, double qty)
 {
-	double delta = (1 - *target) * qty;
+	double delta = (1 - *target) * qty / 4;
 
 	*target += delta;
 	*center -= delta;
@@ -13,10 +13,16 @@ vetor getVetor(PPMPixel* pixel)
 	vetor interacao;
 
 	interacao.theta = 2 * M_PI * pixel->green; // Angulo Theta (Tomar cuidado pra ser no maximo 2pi)
-	interacao.red.x = pixel->red * sin(interacao.theta); // Quantidade de vermelho no eixo X
-	interacao.blue.x = -(pixel->blue * sin(interacao.theta)); // Quantidade de azul no eixo X
-	interacao.red.y = pixel->red * cos(interacao.theta); // Quantidade de vermelho no eixo Y
-	interacao.blue.y = -(pixel->blue * cos(interacao.theta)); // Quantidade de azul no eixo Y
+	interacao.red.x = abs(pixel->red * sin(interacao.theta)); // Quantidade de vermelho no eixo X
+	interacao.blue.x = abs(pixel->blue * sin(interacao.theta)); // Quantidade de azul no eixo X
+	interacao.red.y = abs(pixel->red * cos(interacao.theta)); // Quantidade de vermelho no eixo Y
+	interacao.blue.y = abs(pixel->blue * cos(interacao.theta)); // Quantidade de azul no eixo Y
+
+	if(interacao.theta > 2 * M_PI)
+		printf("\n[ERRO] Angulo maior que 2pi!\n");
+
+	if(interacao.red.x > 1.0 || interacao.red.y > 1.0 || interacao.blue.x > 1.0 || interacao.blue.y > 1.0)
+		printf("\n[ERRO] Pixel esta com alguma cor em excesso!\n");
 
 	return interacao;
 }
