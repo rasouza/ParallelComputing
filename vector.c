@@ -32,18 +32,11 @@ Stencil fillStencil(PPMImage *image, int x, int y) {
 
 	mask.x = x;
 	mask.y = y;
-    if (x > 0)
-	    mask.up		= &image->data[x-1][y];
-    else mask.up = NULL;
-	if (y < image->y)
-        mask.right	= &image->data[x][y+1];
-    else mask.right = NULL;
-	if (x < image->x)
-        mask.down	= &image->data[x+1][y];
-    else mask.down = NULL;
-    if (y > 0)
-        mask.left	= &image->data[x][y-1];
-    else mask.left = NULL;
+
+    mask.up		= &image->data[x-1][y];
+    mask.right	= &image->data[x][y+1];
+    mask.down	= &image->data[x+1][y];
+    mask.left	= &image->data[x][y-1];
 	mask.center	= &image->data[x][y];
 
 	return mask;
@@ -57,51 +50,35 @@ void interact(Stencil *mask, vetor interacao)
 	// P.S. O angulo neste EP começa a partir do eixo vertical Y positivo
 
 	// Angulo no primeiro quadrante
-	if (interacao.theta > 0 && interacao.theta < M_PI_4) {
-        if (mask->up != NULL)
-		    interactTwoBodies(&mask->center->red, &mask->up->red, interacao.red.y); // Vermelho em Y
-		if (mask->right != NULL)
-            interactTwoBodies(&mask->center->red, &mask->right->red, interacao.red.x); // Vermelho em X
-		if (mask->down != NULL)
-            interactTwoBodies(&mask->center->blue, &mask->down->blue, interacao.blue.y); // Azul em Y
-		if (mask->left != NULL)
-            interactTwoBodies(&mask->center->blue, &mask->left->blue, interacao.blue.x); // Azul em X
+	if (interacao.theta > 0 && interacao.theta < M_PI_4) {       
+	    interactTwoBodies(&mask->center->red, &mask->up->red, interacao.red.y); // Vermelho em Y		
+        interactTwoBodies(&mask->center->red, &mask->right->red, interacao.red.x); // Vermelho em X		
+        interactTwoBodies(&mask->center->blue, &mask->down->blue, interacao.blue.y); // Azul em Y
+        interactTwoBodies(&mask->center->blue, &mask->left->blue, interacao.blue.x); // Azul em X
 	}
 
 	// Angulo no segundo quadrante
 	else if (interacao.theta >= M_PI_4 && interacao.theta < M_PI_2) {
-		if (mask->down != NULL)
-            interactTwoBodies(&mask->center->red, &mask->down->red, interacao.red.y); // Vermelho em Y
-		if (mask->right != NULL)
-            interactTwoBodies(&mask->center->red, &mask->right->red, interacao.red.x); // Vermelho em X
-		if (mask->up != NULL) 
-            interactTwoBodies(&mask->center->blue, &mask->up->blue, interacao.blue.y); // Azul em Y
-		if (mask->left != NULL)
-            interactTwoBodies(&mask->center->blue, &mask->left->blue, interacao.blue.x); // Azul em X
+        interactTwoBodies(&mask->center->red, &mask->down->red, interacao.red.y); // Vermelho em Y
+        interactTwoBodies(&mask->center->red, &mask->right->red, interacao.red.x); // Vermelho em X	
+        interactTwoBodies(&mask->center->blue, &mask->up->blue, interacao.blue.y); // Azul em Y
+        interactTwoBodies(&mask->center->blue, &mask->left->blue, interacao.blue.x); // Azul em X
 	}
 
 	// Angulo no terceiro quadrante
 	else if (interacao.theta >= M_PI_2 && interacao.theta < 3 * M_PI_4) {
-		if (mask->down != NULL)
-            interactTwoBodies(&mask->center->red, &mask->down->red, interacao.red.y); // Vermelho em Y
-		if (mask->left != NULL)
-            interactTwoBodies(&mask->center->red, &mask->left->red, interacao.red.x); // Vermelho em X
-		if (mask->up != NULL)
-            interactTwoBodies(&mask->center->blue, &mask->up->blue, interacao.blue.y); // Azul em Y
-		if (mask->right != NULL)
-            interactTwoBodies(&mask->center->blue, &mask->right->blue, interacao.blue.x); // Azul em X
+        interactTwoBodies(&mask->center->red, &mask->down->red, interacao.red.y); // Vermelho em Y
+        interactTwoBodies(&mask->center->red, &mask->left->red, interacao.red.x); // Vermelho em X
+        interactTwoBodies(&mask->center->blue, &mask->up->blue, interacao.blue.y); // Azul em Y
+        interactTwoBodies(&mask->center->blue, &mask->right->blue, interacao.blue.x); // Azul em X
 	}
 
 	// Angulo no quarto quadrante
 	else if (interacao.theta >= 3 * M_PI_4 && interacao.theta < 2 * M_PI) {
-		if (mask->up != NULL)
-            interactTwoBodies(&mask->center->red, &mask->up->red, interacao.red.y); // Vermelho em Y
-		if (mask->left != NULL)
-            interactTwoBodies(&mask->center->red, &mask->left->red, interacao.red.x); // Vermelho em X
-		if (mask->down != NULL)
-            interactTwoBodies(&mask->center->blue, &mask->down->blue, interacao.blue.y); // Azul em Y
-		if (mask->right != NULL)
-            interactTwoBodies(&mask->center->blue, &mask->right->blue, interacao.blue.x); // Azul em X
+        interactTwoBodies(&mask->center->red, &mask->up->red, interacao.red.y); // Vermelho em Y
+        interactTwoBodies(&mask->center->red, &mask->left->red, interacao.red.x); // Vermelho em X
+        interactTwoBodies(&mask->center->blue, &mask->down->blue, interacao.blue.y); // Azul em Y
+        interactTwoBodies(&mask->center->blue, &mask->right->blue, interacao.blue.x); // Azul em X
 	}
 
 
@@ -109,7 +86,7 @@ void interact(Stencil *mask, vetor interacao)
 
 int isExcess(PPMPixel pixel)
 {
-	if (pixel.red > 1.0 || pixel.green > 1.0 || pixel.blue > 1.0)
+	if (pixel.red > 1.0 || pixel.blue > 1.0)
 		return TRUE;
 
 	return FALSE;
@@ -132,33 +109,46 @@ void shareExcess(Stencil *mask)
 
 	if (mask->center->red > 1.0) {
 		count = 0;
-		if (mask->up != NULL && mask->up->red < 1.0) count++;
-		if (mask->right != NULL && mask->right->red < 1.0) count++;
-		if (mask->down != NULL && mask->down->red < 1.0) count++;
-		if (mask->left != NULL && mask->up->red < 1.0) count++;
+		if (mask->up->red < 1.0) count++;
+		if (mask->right->red < 1.0) count++;
+		if (mask->down->red < 1.0) count++;
+		if (mask->up->red < 1.0) count++;
 
-		delta = (mask->center->red - 1);
+		delta = (mask->center->red - 1.0);
 		mask->center->red -= delta;
 
-		if (mask->up != NULL && mask->up->red < 1.0) mask->up->red += delta/count;
-		if (mask->right != NULL && mask->right->red < 1.0) mask->right->red += delta/count;
-		if (mask->down != NULL && mask->down->red < 1.0) mask->down->red += delta/count;
-		if (mask->left != NULL && mask->up->red < 1.0) mask->left->red += delta/count;
+		if (mask->up->red < 1.0) mask->up->red += delta/count;
+		if (mask->right->red < 1.0) mask->right->red += delta/count;
+		if (mask->down->red < 1.0) mask->down->red += delta/count;
+		if (mask->up->red < 1.0) mask->left->red += delta/count;
 	}
 
 	if (mask->center->blue > 1.0) {
 		count = 0;
-		if (mask->up != NULL && mask->up->blue < 1.0) count++;
-		if (mask->right != NULL && mask->right->blue < 1.0) count++;
-		if (mask->down != NULL && mask->down->blue < 1.0) count++;
-		if (mask->left != NULL && mask->up->blue < 1.0) count++;
+		if (mask->up->blue < 1.0) count++;
+		if (mask->right->blue < 1.0) count++;
+		if (mask->down->blue < 1.0) count++;
+		if (mask->up->blue < 1.0) count++;
 
-		delta = (mask->center->blue - 1);
+		delta = (mask->center->blue - 1.0);
 		mask->center->blue -= delta;
 
-		if (mask->up != NULL && mask->up->blue < 1.0) mask->up->blue += delta/count;
-		if (mask->right != NULL && mask->right->blue < 1.0) mask->right->blue += delta/count;
-		if (mask->down != NULL && mask->down->blue < 1.0) mask->down->blue += delta/count;
-		if (mask->left != NULL && mask->up->blue < 1.0) mask->left->blue += delta/count;
+		if (mask->up->blue < 1.0) mask->up->blue += delta/count;
+		if (mask->right->blue < 1.0) mask->right->blue += delta/count;
+		if (mask->down->blue < 1.0) mask->down->blue += delta/count;
+		if (mask->up->blue < 1.0) mask->left->blue += delta/count;
 	}
+}
+
+void rotateTheta(PPMPixel *pixel)
+{
+	double modulo_v = sqrt(pixel->red*pixel->red + pixel->blue*pixel->blue);
+
+	double theta = acos(pixel->blue/modulo_v);
+	theta += pixel->green * 2 * M_PI;
+
+	if (theta > 2 * M_PI)
+		theta -= 2 * M_PI;
+
+	pixel->green = theta / (2 * M_PI);
 }

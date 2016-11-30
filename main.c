@@ -12,18 +12,25 @@ int main() {
 
 	debugPixel(image, 199, 68);
 
-    for (int i = 0; i < image->x; i++) {
-        for (int j = 0; j < image->y; j++) {
-	            mask = populaStencil(image, i, j);
+    for (int i = 1; i < image->y - 1; i++) {
+        for (int j = 1; j < image->x - 1; j++) {
+	            mask = fillStencil(image, i, j);
 	            interacao = getVetor(*mask.center);
 	            interact(&mask, interacao);
         }
     }
 
+    for (int i = 1; i < image->y - 1; i++) {
+        for (int j = 1; j < image->x - 1; j++) {
+        	rotateTheta(&image->data[i][j]);
+        }
+    }
+
 	debugPixel(image, 199, 68);
 
-	
-	// writePPM("data/linux2.ppm", image);
+	writePPM("data/linux2.ppm", image);
+
+    
 }
 
 void debugPixel(PPMImage *image, int x, int y)

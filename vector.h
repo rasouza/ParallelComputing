@@ -29,13 +29,17 @@ typedef struct {
 } Stencil;
 
 
-
-void interactTwoBodies(double* center, double* target, double qty);
 vetor getVetor(PPMPixel pixel);
 Stencil fillStencil(PPMImage *image, int x, int y);
+
+void interactTwoBodies(double* center, double* target, double qty);
 void interact(Stencil *mask, vetor interacao);
+
 int isExcess(PPMPixel pixel);
-void checkExcess(PPMImage);
+void checkExcess(PPMImage *image);
+void shareExcess(Stencil *mask);
+
+void rotateTheta(PPMPixel *pixel);
 
 #endif // !VECTOR_H
 
