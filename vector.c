@@ -13,10 +13,10 @@ vetor getVetor(PPMPixel pixel)
 	vetor interacao;
 
 	interacao.theta = 2 * M_PI * pixel.green; // Angulo Theta (Tomar cuidado pra ser no maximo 2pi)
-	interacao.red.x = abs(pixel.red * sin(interacao.theta)); // Quantidade de vermelho no eixo X
-	interacao.blue.x = abs(pixel.blue * sin(interacao.theta)); // Quantidade de azul no eixo X
-	interacao.red.y = abs(pixel.red * cos(interacao.theta)); // Quantidade de vermelho no eixo Y
-	interacao.blue.y = abs(pixel.blue * cos(interacao.theta)); // Quantidade de azul no eixo Y
+	interacao.red.x = fabs(pixel.red * sin(interacao.theta)); // Quantidade de vermelho no eixo X
+	interacao.blue.x = fabs(pixel.blue * sin(interacao.theta)); // Quantidade de azul no eixo X
+	interacao.red.y = fabs(pixel.red * cos(interacao.theta)); // Quantidade de vermelho no eixo Y
+	interacao.blue.y = fabs(pixel.blue * cos(interacao.theta)); // Quantidade de azul no eixo Y
 
 	if(interacao.theta > 2 * M_PI)
 		printf("\n[ERRO] Angulo maior que 2pi!\n");
@@ -29,7 +29,6 @@ vetor getVetor(PPMPixel pixel)
 
 void interact(Stencil mask, vetor interacao)
 {
-	double *center, *target;
 
 	// @TO-DO: Existe algum jeito de fazer ser um bloco de codigo só?
 
