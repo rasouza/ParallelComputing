@@ -1,9 +1,12 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-# define M_PI		3.14159265358979323846	/* pi */
-# define M_PI_2		1.57079632679489661923	/* pi/2 */
-# define M_PI_4		0.78539816339744830962	/* pi/4 */
+#define M_PI		3.14159265358979323846	/* pi */
+#define M_PI_2		1.57079632679489661923	/* pi/2 */
+#define M_PI_4		0.78539816339744830962	/* pi/4 */
+
+#define TRUE 1
+#define FALSE 0
 
 #include "ppm.h"
 #include <math.h>
@@ -29,10 +32,10 @@ typedef struct {
 
 void interactTwoBodies(double* center, double* target, double qty);
 vetor getVetor(PPMPixel pixel);
-Stencil populaStencil(PPMImage *image, int x, int y);
+Stencil fillStencil(PPMImage *image, int x, int y);
 void interact(Stencil *mask, vetor interacao);
 int isExcess(PPMPixel pixel);
-
+void checkExcess(PPMImage);
 
 #endif // !VECTOR_H
 

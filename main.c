@@ -11,6 +11,7 @@ int main() {
 	image = readPPM("data/linux.ppm");
 
 	debugPixel(image, 199, 68);
+
     for (int i = 0; i < image->x; i++) {
         for (int j = 0; j < image->y; j++) {
 	            mask = populaStencil(image, i, j);
@@ -18,6 +19,7 @@ int main() {
 	            interact(&mask, interacao);
         }
     }
+
 	debugPixel(image, 199, 68);
 
 	
@@ -37,6 +39,6 @@ void debugPixel(PPMImage *image, int x, int y)
 
 	interacao = getVetor(image->data[x][y]);
 	printf("\nO vetor eh: \n");
-	printf("Theta: %lf\nRed: (%lf,%lf)\nBlue: (%lf,%lf)\n", interacao.theta, interacao.red.x, interacao.red.y, interacao.blue.x, interacao.blue.y);
+	printf("Theta: %lf\nRed: (%lf,%lf)\nBlue: (%lf,%lf)\n\n\n", interacao.theta, interacao.red.x, interacao.red.y, interacao.blue.x, interacao.blue.y);
 
 }

@@ -27,7 +27,7 @@ vetor getVetor(PPMPixel pixel)
 	return interacao;
 }
 
-Stencil populaStencil(PPMImage *image, int x, int y) {
+Stencil fillStencil(PPMImage *image, int x, int y) {
 	Stencil mask;
 
 	mask.x = x;
@@ -109,5 +109,56 @@ void interact(Stencil *mask, vetor interacao)
 
 int isExcess(PPMPixel pixel)
 {
-	return pixel.red > 1.0 || pixel.green > 1.0 || pixel.blue > 1.0;
+	if (pixel.red > 1.0 || pixel.green > 1.0 || pixel.blue > 1.0)
+		return TRUE;
+
+	return FALSE;
+}
+
+void checkExcess(PPMImage *image)
+{
+	for(int i = 0; i < image->y; i++)
+		for(int j = 0; j < image->x; j++)
+			if (isExcess(image->data[i][j])) {
+				Stencil mask = fillStencil(image, i, j);
+				shareExcess(&mask);
+			}
+}
+
+void shareExcess(Stencil *mask)
+{
+	int count;
+	double delta;
+
+	if (mask->center->red > 1.0) {
+		count = 0;
+		if (mask->up != NULL && mask->up->red < 1.0) count++;
+		if (mask->right != NULL && mask->right->red < 1.0) count++;
+		if (mask->down != NULL && mask->down->red < 1.0) count++;
+		if (mask->left != NULL && mask->up->red < 1.0) count++;
+
+		delta = (mask->center->red - 1);
+		mask->center->red -= delta;
+
+		if (mask->up != NULL && mask->up->red < 1.0) mask->up->red += delta/count;
+		if (mask->right != NULL && mask->right->red < 1.0) mask->right->red += delta/count;
+		if (mask->down != NULL && mask->down->red < 1.0) mask->down->red += delta/count;
+		if (mask->left != NULL && mask->up->red < 1.0) mask->left->red += delta/count;
+	}
+
+	if (mask->center->blue > 1.0) {
+		count = 0;
+		if (mask->up != NULL && mask->up->blue < 1.0) count++;
+		if (mask->right != NULL && mask->right->blue < 1.0) count++;
+		if (mask->down != NULL && mask->down->blue < 1.0) count++;
+		if (mask->left != NULL && mask->up->blue < 1.0) count++;
+
+		delta = (mask->center->blue - 1);
+		mask->center->blue -= delta;
+
+		if (mask->up != NULL && mask->up->blue < 1.0) mask->up->blue += delta/count;
+		if (mask->right != NULL && mask->right->blue < 1.0) mask->right->blue += delta/count;
+		if (mask->down != NULL && mask->down->blue < 1.0) mask->down->blue += delta/count;
+		if (mask->left != NULL && mask->up->blue < 1.0) mask->left->blue += delta/count;
+	}
 }
