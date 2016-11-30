@@ -5,19 +5,18 @@ void debugPixel(PPMImage *image, int x, int y);
 int main() {
 	PPMImage *image;
 	vetor interacao;
+	Stencil mask;
 	image = readPPM("data/linux.ppm");
 
 	debugPixel(image, 199, 68);
 
-	printf("\n\n [[[ Interagindo 2 corpos... ]]] \n");
-	printf(" [[[ Pixel (199,68) com (198,68) ]]] \n");
-	printf(" [[[ vermelho na direcao Y ]]] \n\n");
-	interacao = getVetor(image->data[199][68]);
-	interactTwoBodies(&image->data[199][68].red, &image->data[198][68].red, interacao.red.y);
-
+	mask = populaStencil(image, 199, 68);
+	interacao = getVetor(*mask.center);
+	interact(&mask, interacao);
 
 	debugPixel(image, 199, 68);
 
+	
 	// writePPM("data/linux2.ppm", image);
 }
 

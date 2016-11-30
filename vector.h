@@ -29,7 +29,8 @@ typedef struct {
 
 void interactTwoBodies(double* center, double* target, double qty);
 vetor getVetor(PPMPixel pixel);
-void interact(Stencil mask, vetor interacao);
+Stencil populaStencil(PPMImage *image, int x, int y);
+void interact(Stencil *mask, vetor interacao);
 int isExcess(PPMPixel pixel);
 
 
