@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -fopenmp -O2 -Wall -ansi -pedantic -Wno-unused-result -std=c11 -lm
+CFLAGS = -fopenmp -Wall -ansi -pedantic -Wno-unused-result -std=c11 -lm 
 
 all: main
 
