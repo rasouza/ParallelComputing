@@ -32,11 +32,18 @@ Stencil populaStencil(PPMImage *image, int x, int y) {
 
 	mask.x = x;
 	mask.y = y;
-
-	mask.up		= &image->data[x-1][y];
-	mask.right	= &image->data[x][y+1];
-	mask.down	= &image->data[x+1][y];
-	mask.left	= &image->data[x][y-1];
+    if (x > 0)
+	    mask.up		= &image->data[x-1][y];
+    else mask.up = NULL;
+	if (y < image->y)
+        mask.right	= &image->data[x][y+1];
+    else mask.right = NULL;
+	if (x < image->x)
+        mask.down	= &image->data[x+1][y];
+    else mask.down = NULL;
+    if (y > 0)
+        mask.left	= &image->data[x][y-1];
+    else mask.left = NULL;
 	mask.center	= &image->data[x][y];
 
 	return mask;
@@ -51,34 +58,50 @@ void interact(Stencil *mask, vetor interacao)
 
 	// Angulo no primeiro quadrante
 	if (interacao.theta > 0 && interacao.theta < M_PI_4) {
-		interactTwoBodies(&mask->center->red, &mask->up->red, interacao.red.y); // Vermelho em Y
-		interactTwoBodies(&mask->center->red, &mask->right->red, interacao.red.x); // Vermelho em X
-		interactTwoBodies(&mask->center->blue, &mask->down->blue, interacao.blue.y); // Azul em Y
-		interactTwoBodies(&mask->center->blue, &mask->left->blue, interacao.blue.x); // Azul em X
+        if (mask->up != NULL)
+		    interactTwoBodies(&mask->center->red, &mask->up->red, interacao.red.y); // Vermelho em Y
+		if (mask->right != NULL)
+            interactTwoBodies(&mask->center->red, &mask->right->red, interacao.red.x); // Vermelho em X
+		if (mask->down != NULL)
+            interactTwoBodies(&mask->center->blue, &mask->down->blue, interacao.blue.y); // Azul em Y
+		if (mask->left != NULL)
+            interactTwoBodies(&mask->center->blue, &mask->left->blue, interacao.blue.x); // Azul em X
 	}
 
 	// Angulo no segundo quadrante
 	else if (interacao.theta >= M_PI_4 && interacao.theta < M_PI_2) {
-		interactTwoBodies(&mask->center->red, &mask->down->red, interacao.red.y); // Vermelho em Y
-		interactTwoBodies(&mask->center->red, &mask->right->red, interacao.red.x); // Vermelho em X
-		interactTwoBodies(&mask->center->blue, &mask->up->blue, interacao.blue.y); // Azul em Y
-		interactTwoBodies(&mask->center->blue, &mask->left->blue, interacao.blue.x); // Azul em X
+		if (mask->down != NULL)
+            interactTwoBodies(&mask->center->red, &mask->down->red, interacao.red.y); // Vermelho em Y
+		if (mask->right != NULL)
+            interactTwoBodies(&mask->center->red, &mask->right->red, interacao.red.x); // Vermelho em X
+		if (mask->up != NULL) 
+            interactTwoBodies(&mask->center->blue, &mask->up->blue, interacao.blue.y); // Azul em Y
+		if (mask->left != NULL)
+            interactTwoBodies(&mask->center->blue, &mask->left->blue, interacao.blue.x); // Azul em X
 	}
 
 	// Angulo no terceiro quadrante
 	else if (interacao.theta >= M_PI_2 && interacao.theta < 3 * M_PI_4) {
-		interactTwoBodies(&mask->center->red, &mask->down->red, interacao.red.y); // Vermelho em Y
-		interactTwoBodies(&mask->center->red, &mask->left->red, interacao.red.x); // Vermelho em X
-		interactTwoBodies(&mask->center->blue, &mask->up->blue, interacao.blue.y); // Azul em Y
-		interactTwoBodies(&mask->center->blue, &mask->right->blue, interacao.blue.x); // Azul em X
+		if (mask->down != NULL)
+            interactTwoBodies(&mask->center->red, &mask->down->red, interacao.red.y); // Vermelho em Y
+		if (mask->left != NULL)
+            interactTwoBodies(&mask->center->red, &mask->left->red, interacao.red.x); // Vermelho em X
+		if (mask->up != NULL)
+            interactTwoBodies(&mask->center->blue, &mask->up->blue, interacao.blue.y); // Azul em Y
+		if (mask->right != NULL)
+            interactTwoBodies(&mask->center->blue, &mask->right->blue, interacao.blue.x); // Azul em X
 	}
 
 	// Angulo no quarto quadrante
 	else if (interacao.theta >= 3 * M_PI_4 && interacao.theta < 2 * M_PI) {
-		interactTwoBodies(&mask->center->red, &mask->up->red, interacao.red.y); // Vermelho em Y
-		interactTwoBodies(&mask->center->red, &mask->left->red, interacao.red.x); // Vermelho em X
-		interactTwoBodies(&mask->center->blue, &mask->down->blue, interacao.blue.y); // Azul em Y
-		interactTwoBodies(&mask->center->blue, &mask->right->blue, interacao.blue.x); // Azul em X
+		if (mask->up != NULL)
+            interactTwoBodies(&mask->center->red, &mask->up->red, interacao.red.y); // Vermelho em Y
+		if (mask->left != NULL)
+            interactTwoBodies(&mask->center->red, &mask->left->red, interacao.red.x); // Vermelho em X
+		if (mask->down != NULL)
+            interactTwoBodies(&mask->center->blue, &mask->down->blue, interacao.blue.y); // Azul em Y
+		if (mask->right != NULL)
+            interactTwoBodies(&mask->center->blue, &mask->right->blue, interacao.blue.x); // Azul em X
 	}
 
 

@@ -1,4 +1,6 @@
 #include "vector.h"
+#include<stdio.h>
+#include<stdlib.h>
 
 void debugPixel(PPMImage *image, int x, int y);
 
@@ -9,11 +11,13 @@ int main() {
 	image = readPPM("data/linux.ppm");
 
 	debugPixel(image, 199, 68);
-
-	mask = populaStencil(image, 199, 68);
-	interacao = getVetor(*mask.center);
-	interact(&mask, interacao);
-
+    for (int i = 0; i < image->x; i++) {
+        for (int j = 0; j < image->y; j++) {
+	            mask = populaStencil(image, i, j);
+	            interacao = getVetor(*mask.center);
+	            interact(&mask, interacao);
+        }
+    }
 	debugPixel(image, 199, 68);
 
 	
