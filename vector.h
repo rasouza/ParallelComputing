@@ -17,6 +17,7 @@
 #endif
 
 #include "ppm.h"
+#include <omp.h>
 #include <math.h>
 
 // Vetor de cor decomposto em coordenadas cartesianas
@@ -40,8 +41,8 @@ typedef struct {
 vetor getVetor(PPMPixel pixel);
 Stencil fillStencil(PPMImage *image, int x, int y);
 
-void interactTwoBodies(double* center, double* target, double qty);
-void interact(Stencil *mask, vetor interacao);
+void interactTwoBodies(double* center, double* target, double qty, omp_lock_t lock);
+void interact(Stencil *mask, vetor interacao, omp_lock_t lock);
 
 int isExcess(PPMPixel pixel);
 void checkExcess(PPMImage *image);

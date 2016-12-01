@@ -15,7 +15,8 @@ int main(int argc, char **argv) {
 
 	int iteracoes = atoi(argv[3]);
 	int processadores = atoi(argv[4]);
-
+    omp_lock_t lock;
+    omp_init_lock(&lock);
 	image = readPPM(argv[1]);
 
 	// x_max = image->y - 1;
@@ -75,11 +76,12 @@ int main(int argc, char **argv) {
 	        }
 	    }
 	}*/
-   
+    #pragma omp parallel  
 	for (int i = 0; i < iteracoes; i++) {
 		int ROW = image->y;
 		int COL = image->x;
 		// There will be ROW+COL-1 lines in the output
+        #pragma omp for
 	    for (int line=1; line<=(ROW + COL -1); line++)
 	    {
 	        /* Get column index of the first element in this line of output.
@@ -97,7 +99,7 @@ int main(int argc, char **argv) {
 	        	// printf("(%d, %d)", min(ROW, line)-j-1, start_col+j);
 	            mask = fillStencil(image, min(ROW, line)-j-1, start_col+j);
 	            interacao = getVetor(*mask.center);
-	            interact(&mask, interacao);
+	            interact(&mask, interacao, lock);
 	        }
 
 	        // printf("\n");

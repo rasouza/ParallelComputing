@@ -1,11 +1,13 @@
 #include "vector.h"
 
-void interactTwoBodies(double* center, double* target, double qty)
+void interactTwoBodies(double* center, double* target, double qty, omp_lock_t lock)
 {
 	double delta = (1 - *target) * qty / 4;
 
+    omp_set_lock(&lock);
 	*target += delta;
 	*center -= delta;
+    omp_unset_lock(&lock);
 }
 
 vetor getVetor(PPMPixel pixel)
@@ -20,10 +22,10 @@ vetor getVetor(PPMPixel pixel)
 
 	if(interacao.theta > 2 * M_PI)
 		printf("\n[ERRO] Angulo maior que 2pi!\n");
-
-	if(interacao.red.x > 1.0 || interacao.red.y > 1.0 || interacao.blue.x > 1.0 || interacao.blue.y > 1.0)
+	if(interacao.red.x > 1.0 || interacao.red.y > 1.0 || interacao.blue.x > 1.0 || interacao.blue.y > 1.0) {
+        printf("R (%lf, %lf) B (%lf, %lf)\n", interacao.red.x, interacao.red.y, interacao.blue.x, interacao.blue.y);
 		printf("\n[ERRO] Pixel esta com alguma cor em excesso!\n");
-
+    }
 	return interacao;
 }
 
@@ -42,7 +44,7 @@ Stencil fillStencil(PPMImage *image, int x, int y) {
 	return mask;
 }
 
-void interact(Stencil *mask, vetor interacao)
+void interact(Stencil *mask, vetor interacao, omp_lock_t lock)
 {
 
 	// @TO-DO: Existe algum jeito de fazer ser um bloco de codigo só?
@@ -51,34 +53,34 @@ void interact(Stencil *mask, vetor interacao)
 
 	// Angulo no primeiro quadrante
 	if (interacao.theta > 0 && interacao.theta < M_PI_4) {       
-	    interactTwoBodies(&mask->center->red, &mask->up->red, interacao.red.y); // Vermelho em Y		
-        interactTwoBodies(&mask->center->red, &mask->right->red, interacao.red.x); // Vermelho em X		
-        interactTwoBodies(&mask->center->blue, &mask->down->blue, interacao.blue.y); // Azul em Y
-        interactTwoBodies(&mask->center->blue, &mask->left->blue, interacao.blue.x); // Azul em X
+	    interactTwoBodies(&mask->center->red, &mask->up->red, interacao.red.y, lock); // Vermelho em Y		
+        interactTwoBodies(&mask->center->red, &mask->right->red, interacao.red.x, lock); // Vermelho em X		
+        interactTwoBodies(&mask->center->blue, &mask->down->blue, interacao.blue.y, lock); // Azul em Y
+        interactTwoBodies(&mask->center->blue, &mask->left->blue, interacao.blue.x, lock); // Azul em X
 	}
 
 	// Angulo no segundo quadrante
 	else if (interacao.theta >= M_PI_4 && interacao.theta < M_PI_2) {
-        interactTwoBodies(&mask->center->red, &mask->down->red, interacao.red.y); // Vermelho em Y
-        interactTwoBodies(&mask->center->red, &mask->right->red, interacao.red.x); // Vermelho em X	
-        interactTwoBodies(&mask->center->blue, &mask->up->blue, interacao.blue.y); // Azul em Y
-        interactTwoBodies(&mask->center->blue, &mask->left->blue, interacao.blue.x); // Azul em X
+        interactTwoBodies(&mask->center->red, &mask->down->red, interacao.red.y, lock); // Vermelho em Y
+        interactTwoBodies(&mask->center->red, &mask->right->red, interacao.red.x, lock); // Vermelho em X	
+        interactTwoBodies(&mask->center->blue, &mask->up->blue, interacao.blue.y, lock); // Azul em Y
+        interactTwoBodies(&mask->center->blue, &mask->left->blue, interacao.blue.x, lock); // Azul em X
 	}
 
 	// Angulo no terceiro quadrante
 	else if (interacao.theta >= M_PI_2 && interacao.theta < 3 * M_PI_4) {
-        interactTwoBodies(&mask->center->red, &mask->down->red, interacao.red.y); // Vermelho em Y
-        interactTwoBodies(&mask->center->red, &mask->left->red, interacao.red.x); // Vermelho em X
-        interactTwoBodies(&mask->center->blue, &mask->up->blue, interacao.blue.y); // Azul em Y
-        interactTwoBodies(&mask->center->blue, &mask->right->blue, interacao.blue.x); // Azul em X
+        interactTwoBodies(&mask->center->red, &mask->down->red, interacao.red.y, lock); // Vermelho em Y
+        interactTwoBodies(&mask->center->red, &mask->left->red, interacao.red.x, lock); // Vermelho em X
+        interactTwoBodies(&mask->center->blue, &mask->up->blue, interacao.blue.y, lock); // Azul em Y
+        interactTwoBodies(&mask->center->blue, &mask->right->blue, interacao.blue.x, lock); // Azul em X
 	}
 
 	// Angulo no quarto quadrante
 	else if (interacao.theta >= 3 * M_PI_4 && interacao.theta < 2 * M_PI) {
-        interactTwoBodies(&mask->center->red, &mask->up->red, interacao.red.y); // Vermelho em Y
-        interactTwoBodies(&mask->center->red, &mask->left->red, interacao.red.x); // Vermelho em X
-        interactTwoBodies(&mask->center->blue, &mask->down->blue, interacao.blue.y); // Azul em Y
-        interactTwoBodies(&mask->center->blue, &mask->right->blue, interacao.blue.x); // Azul em X
+        interactTwoBodies(&mask->center->red, &mask->up->red, interacao.red.y, lock); // Vermelho em Y
+        interactTwoBodies(&mask->center->red, &mask->left->red, interacao.red.x, lock); // Vermelho em X
+        interactTwoBodies(&mask->center->blue, &mask->down->blue, interacao.blue.y, lock); // Azul em Y
+        interactTwoBodies(&mask->center->blue, &mask->right->blue, interacao.blue.x, lock); // Azul em X
 	}
 
 
