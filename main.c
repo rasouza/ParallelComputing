@@ -7,23 +7,23 @@
 void debugPixel(PPMImage *image, int x, int y);
 
 int main(int argc, char **argv) {
-	/*PPMImage *image;
+	PPMImage *image;
 	vetor interacao;
 	Stencil mask;
 
-	int x, y, x_max, y_max, sub_x, sub_y;
+	// int x, y, x_max, y_max, sub_x, sub_y;
 
 	int iteracoes = atoi(argv[3]);
 	int processadores = atoi(argv[4]);
 
 	image = readPPM(argv[1]);
 
-	x_max = image->y - 1;
-	y_max = image->x - 1;
+	// x_max = image->y - 1;
+	// y_max = image->x - 1;
 
 	omp_set_num_threads(processadores);
 
-	#pragma omp ordered
+	/*#pragma omp ordered
 	for (int i = 0; i < iteracoes; i++) {
 
 		x = 1;
@@ -74,43 +74,45 @@ int main(int argc, char **argv) {
 
 	        }
 	    }
-	}
+	}*/
    
-	writePPM(argv[2], image);*/
+	for (int i = 0; i < iteracoes; i++) {
+		int ROW = image->y;
+		int COL = image->x;
+		// There will be ROW+COL-1 lines in the output
+	    for (int line=1; line<=(ROW + COL -1); line++)
+	    {
+	        /* Get column index of the first element in this line of output.
+	           The index is 0 for first ROW lines and line - ROW for remaining
+	           lines  */
+	        int start_col =  max(0, line-ROW);
+	 
+	        /* Get count of elements in this line. The count of elements is
+	           equal to minimum of line number, COL-start_col and ROW */
+	        int count = min(line, ROW);
+	        count = min(count, (COL-start_col));
+	 
+	        /* Print elements of this line */
+	        for (int j=1; j<count-1; j++) {
+	        	// printf("(%d, %d)", min(ROW, line)-j-1, start_col+j);
+	            mask = fillStencil(image, min(ROW, line)-j-1, start_col+j);
+	            interacao = getVetor(*mask.center);
+	            interact(&mask, interacao);
+	        }
 
-	// int dim = 5;
-	// for( int k = 0 ; k < dim * 2 ; k++ ) {
- //        for( int j = 0 ; j <= k ; j++ ) {
- //            int i = k - j;
- //            if(( i < dim && j < dim ) && (i != 0 && i != dim - 1 && j != 0 && j != dim - 1) ) {
- //                printf("(%d, %d)", i, j);;
- //            }
- //        }
- //        printf("\n");
- //    }
+	        // printf("\n");
+	    }
 
-	int ROW = 10;
-	int COL = 10;
-	// There will be ROW+COL-1 lines in the output
-    for (int line=1; line<=(ROW + COL -1); line++)
-    {
-        /* Get column index of the first element in this line of output.
-           The index is 0 for first ROW lines and line - ROW for remaining
-           lines  */
-        int start_col =  max(0, line-ROW);
- 
-        /* Get count of elements in this line. The count of elements is
-           equal to minimum of line number, COL-start_col and ROW */
-         int count = min(line, ROW);
-         count = min(count, (COL-start_col));
- 
-        /* Print elements of this line */
-        for (int j=1; j<count-1; j++)
-            printf("(%d, %d) ", min(ROW, line)-j-1, start_col+j);
- 
-        /* Ptint elements of next diagonal on next line */
-        printf("\n");
+	   
+	    for(int i = 1; i < image->y - 1; i++)
+	    	for(int j = 1; j < image->x - 1; j++) {
+	    		// printf("Rotacionando (%d, %d) ", i, j);
+				rotateTheta(&image->data[i][j]);
+	    	}
+
     }
+
+    writePPM(argv[2], image);
     
 }
 

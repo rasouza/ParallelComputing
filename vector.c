@@ -144,11 +144,18 @@ void rotateTheta(PPMPixel *pixel)
 {
 	double modulo_v = sqrt(pixel->red*pixel->red + pixel->blue*pixel->blue);
 
-	double theta = acos(pixel->blue/modulo_v);
-	theta += pixel->green * 2 * M_PI;
+	if (modulo_v != 0.0) {
+		double theta = acos(pixel->blue/modulo_v);
+		theta += pixel->green * 2 * M_PI;
 
-	if (theta > 2 * M_PI)
-		theta -= 2 * M_PI;
+		if (theta > 2 * M_PI)
+			theta -= 2 * M_PI;
 
-	pixel->green = theta / (2 * M_PI);
+		theta = theta / (2*M_PI);
+
+		
+		// printf("G: %lf | Theta: %lf | Modulo_v: %lf\n", pixel->green, theta, modulo_v);
+
+		pixel->green = theta;
+	}
 }
