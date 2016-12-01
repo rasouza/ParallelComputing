@@ -7,7 +7,7 @@
 void debugPixel(PPMImage *image, int x, int y);
 
 int main(int argc, char **argv) {
-	PPMImage *image;
+	/*PPMImage *image;
 	vetor interacao;
 	Stencil mask;
 
@@ -22,8 +22,6 @@ int main(int argc, char **argv) {
 	y_max = image->x - 1;
 
 	omp_set_num_threads(processadores);
-
-
 
 	#pragma omp ordered
 	for (int i = 0; i < iteracoes; i++) {
@@ -78,8 +76,41 @@ int main(int argc, char **argv) {
 	    }
 	}
    
-	writePPM(argv[2], image);
+	writePPM(argv[2], image);*/
 
+	// int dim = 5;
+	// for( int k = 0 ; k < dim * 2 ; k++ ) {
+ //        for( int j = 0 ; j <= k ; j++ ) {
+ //            int i = k - j;
+ //            if(( i < dim && j < dim ) && (i != 0 && i != dim - 1 && j != 0 && j != dim - 1) ) {
+ //                printf("(%d, %d)", i, j);;
+ //            }
+ //        }
+ //        printf("\n");
+ //    }
+
+	int ROW = 10;
+	int COL = 10;
+	// There will be ROW+COL-1 lines in the output
+    for (int line=1; line<=(ROW + COL -1); line++)
+    {
+        /* Get column index of the first element in this line of output.
+           The index is 0 for first ROW lines and line - ROW for remaining
+           lines  */
+        int start_col =  max(0, line-ROW);
+ 
+        /* Get count of elements in this line. The count of elements is
+           equal to minimum of line number, COL-start_col and ROW */
+         int count = min(line, ROW);
+         count = min(count, (COL-start_col));
+ 
+        /* Print elements of this line */
+        for (int j=1; j<count-1; j++)
+            printf("(%d, %d) ", min(ROW, line)-j-1, start_col+j);
+ 
+        /* Ptint elements of next diagonal on next line */
+        printf("\n");
+    }
     
 }
 
