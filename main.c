@@ -11,73 +11,16 @@ int main(int argc, char **argv) {
 	vetor interacao;
 	Stencil mask;
 
-	// int x, y, x_max, y_max, sub_x, sub_y;
-
 	int iteracoes = atoi(argv[3]);
 	int processadores = atoi(argv[4]);
     omp_lock_t lock;
     omp_init_lock(&lock);
 	image = readPPM(argv[1]);
 
-	// x_max = image->y - 1;
-	// y_max = image->x - 1;
-
 	omp_set_num_threads(processadores);
 
-	/*#pragma omp ordered
-	for (int i = 0; i < iteracoes; i++) {
-
-		x = 1;
-		y = 1;     
-
-	    while (x < x_max - 1 && y < y_max -1) {
-
-	    	// Loop na diagonal, por causa dos vetores de dependencia
-	    	#pragma omp parallel
-	    	{
-	    		int nthreads = omp_get_num_threads();
-    			int ithread = omp_get_thread_num();
-    			x = (ithread * image->y / nthreads) + 1;
-    			x_max = ((ithread + 1) * image->y / nthreads) - 1;
-
-		        for (sub_x = x, sub_y = y; sub_x >= 1 && sub_y < y_max; sub_x--, sub_y++) {
-		            mask = fillStencil(image, sub_x, sub_y);
-		            interacao = getVetor(*mask.center);
-		            interact(&mask, interacao);
-		        }
-			    
-
-		        if (x < x_max - 1) x++;
-		        else if (y < y_max - 1) y++;
-
-
-		    }
-	    }
-
-	    x = 1;
-		y = 1; 
-
-	    while (x < x_max - 1 && y < y_max -1) {
-
-	    	// Loop na diagonal, por causa dos vetores de dependencia
-	    	#pragma omp parallel
-	    	{
-	    		int nthreads = omp_get_num_threads();
-    			int ithread = omp_get_thread_num();
-    			x = (ithread * image->y / nthreads) + 1;
-    			x_max = ((ithread + 1) * image->y / nthreads) - 1;
-
-		        for (sub_x = x, sub_y = y; sub_x >= 1 && sub_y < y_max; sub_x--, sub_y++)
-		            rotateTheta(&image->data[sub_x][sub_y]);
-	
-		        if (x < x_max - 1) x++;
-		        else if (y < y_max - 1) y++;
-
-	        }
-	    }
-	}*/
     #pragma omp parallel  
-	for (int i = 0; i < iteracoes; i++) {
+	for (int iter = 0; iter < iteracoes; iter++) {
 		int ROW = image->y;
 		int COL = image->x;
 		// There will be ROW+COL-1 lines in the output
@@ -102,13 +45,12 @@ int main(int argc, char **argv) {
 	            interact(&mask, interacao, lock);
 	        }
 
-	        // printf("\n");
 	    }
 
 	   
 	    for(int i = 1; i < image->y - 1; i++)
 	    	for(int j = 1; j < image->x - 1; j++) {
-	    		// printf("Rotacionando (%d, %d) ", i, j);
+	    		
 				rotateTheta(&image->data[i][j]);
 	    	}
 

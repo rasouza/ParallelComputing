@@ -4,10 +4,22 @@ void interactTwoBodies(double* center, double* target, double qty, omp_lock_t lo
 {
 	double delta = (1 - *target) * qty / 4;
 
+
+	// if (*center - delta < 0.0 || *target  delta > 1.0 )
+	// printf("[DEBUG] center: %lf | target: %lf | delta: %lf\n", *center, *target, qty);
+
     omp_set_lock(&lock);
 	*target += delta;
 	*center -= delta;
     omp_unset_lock(&lock);
+
+    if (*target < 0.0)
+    	*target = 0.0;
+
+    if (*center < 0.0)
+    	*center = 0.0;
+    
+
 }
 
 vetor getVetor(PPMPixel pixel)
@@ -23,8 +35,8 @@ vetor getVetor(PPMPixel pixel)
 	if(interacao.theta > 2 * M_PI)
 		printf("\n[ERRO] Angulo maior que 2pi!\n");
 	if(interacao.red.x > 1.0 || interacao.red.y > 1.0 || interacao.blue.x > 1.0 || interacao.blue.y > 1.0) {
-        printf("R (%lf, %lf) B (%lf, %lf)\n", interacao.red.x, interacao.red.y, interacao.blue.x, interacao.blue.y);
-		printf("\n[ERRO] Pixel esta com alguma cor em excesso!\n");
+        // printf("R (%lf, %lf) B (%lf, %lf)\n", interacao.red.x, interacao.red.y, interacao.blue.x, interacao.blue.y);
+		// printf("\n[ERRO] Pixel esta com alguma cor em excesso!\n");
     }
 	return interacao;
 }
@@ -88,6 +100,8 @@ void interact(Stencil *mask, vetor interacao, omp_lock_t lock)
 
 int isExcess(PPMPixel pixel)
 {
+
+	// printf("pixel.red %lf pixel.blue %lf\n", pixel.red, pixel.blue);
 	if (pixel.red > 1.0 || pixel.blue > 1.0)
 		return TRUE;
 
